@@ -76,12 +76,12 @@ hash(Outlen0, Source, Rate, Delim) ->
 
   % // Absorb input.
   A0 = binary_new(200),
-  {A1, _, Inlen} = foldP(A0, Source, Inlen, fun xorin/4, Rate),
+  {A1, _, Inlen1} = foldP(A0, Source, Inlen, fun xorin/4, Rate),
   % // Xor source the DS and pad frame.
-  A2 = binary_xor(A1, Inlen, <<Delim>>),
+  A2 = binary_xor(A1, Inlen1, <<Delim>>),
   A3 = binary_xor(A2, Rate - 1, <<16#80>>),
   % // Xor source the last block.
-  {A4, _Source} = xorin(A3, Source, trunc(byte_size(Source) - Inlen), Inlen),
+  {A4, _Source} = xorin(A3, Source, trunc(byte_size(Source) - Inlen1), Inlen1),
   % // Apply P
   A5 = keccakf(A4),
   % // Squeeze output.
